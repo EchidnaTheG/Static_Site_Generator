@@ -27,6 +27,20 @@ class TestHTMLNode(unittest.TestCase):
     def test_ulrnone(self):
         node = HTMLNode("h1","Welcome to My Website!")
         self.assertEqual(node.props, None)
-    
+
+    def test_props_to_html(self):
+        # Test with multiple properties
+        node = HTMLNode(props={"href": "https://www.google.com", "target": "_blank"})
+        self.assertEqual(node.props_to_html(), ' href="https://www.google.com" target="_blank"')
+        
+        # Test with single property
+        node2 = HTMLNode(props={"class": "header"})
+        self.assertEqual(node2.props_to_html(), ' class="header"')
+        
+        # Test with None props
+        node3 = HTMLNode()
+        self.assertEqual(node3.props_to_html(), "")
+
+
 if __name__ == "__main__":
     unittest.main()
