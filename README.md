@@ -4,23 +4,23 @@ A Python-based static site generator that converts markdown content into HTML us
 
 ## Project Structure
 
-\`\`\`bash
+```
 Static_Site_Generator/
 ├── src/
 │   ├── htmlnode.py
 │   ├── leafnode.py
 │   ├── test_htmlnode.py
 │   └── test_leafnode.py
-\`\`\`
+```
 
 ## Components
 
 ### HTMLNode
 Base class that represents an HTML element with the following properties:
-- \`tag\`: The HTML tag name (e.g., "p", "h1", "a")
-- \`value\`: The content/text of the element
-- \`children\`: Child nodes (None for leaf nodes)
-- \`props\`: HTML attributes as a dictionary (e.g., {"class": "greeting"})
+- `tag`: The HTML tag name (e.g., "p", "h1", "a")
+- `value`: The content/text of the element
+- `children`: Child nodes (None for leaf nodes)
+- `props`: HTML attributes as a dictionary (e.g., {"class": "greeting"})
 
 ### LeafNode
 Extends HTMLNode to represent elements without children (text nodes). Features:
@@ -39,14 +39,14 @@ The project includes comprehensive unit tests covering:
 - Node equality comparison
 
 To run the tests:
-\`\`\`bash
+```bash
 python -m unittest src/test_htmlnode.py
 python -m unittest src/test_leafnode.py
-\`\`\`
+```
 
 ## Usage Example
 
-\`\`\`python
+```python
 from leafnode import LeafNode
 
 # Create a link with properties
@@ -56,10 +56,9 @@ print(link.to_html())  # Output: <a href="https://www.google.com">Click me!</a>
 # Create a simple paragraph
 para = LeafNode("p", "Hello, world!")
 print(para.to_html())  # Output: <p>Hello, world!</p>
-\`\`\`
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-EOF
