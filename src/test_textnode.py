@@ -28,5 +28,37 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("This is a text node", TextType.BOLD)
         self.assertEqual(node.url, None)
     
+    def test_TextNode_to_LeafNode_Invalid_Type(self):
+          with self.assertRaises(ValueError):
+            node = TextNode("This is a text node", "NO")
+            node.text_node_to_html_node()
+
+    def test_TextNode_to_LeafNode_Text(self):
+            node = TextNode("This is a text node", TextType.TEXT)
+            html_node = node.text_node_to_html_node()
+            self.assertEqual(html_node.tag, None)
+            self.assertEqual(html_node.value, "This is a text node")
+
+    def test_TextNode_to_LeafNode_Bold(self):
+        node = TextNode("Bold text", TextType.BOLD)
+        html_node = node.text_node_to_html_node()
+        self.assertEqual(html_node.tag, "b")
+        self.assertEqual(html_node.value, "Bold text")
+
+
+    def test_TextNode_to_LeafNode_Italic(self):
+        node = TextNode("Italic text", TextType.ITALIC)
+        html_node = node.text_node_to_html_node()
+        self.assertEqual(html_node.tag, "i")
+        self.assertEqual(html_node.value, "Italic text")
+
+
+    def test_TextNode_to_LeafNode_Code(self):
+        node = TextNode("print('hello')", TextType.CODE)
+        html_node = node.text_node_to_html_node()
+        self.assertEqual(html_node.tag, "code")
+        self.assertEqual(html_node.value, "print('hello')")
+
+
 if __name__ == "__main__":
     unittest.main()
