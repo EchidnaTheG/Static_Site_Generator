@@ -27,6 +27,6 @@ class TestTextNode(unittest.TestCase):
     def test_ulrnone(self):
         node = TextNode("This is a text node", TextType.BOLD)
         self.assertEqual(node.url, None)
-
+    
 if __name__ == "__main__":
     unittest.main()
