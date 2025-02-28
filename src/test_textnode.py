@@ -14,7 +14,7 @@ class TestTextNode(unittest.TestCase):
         node2 = TextNode("This is a text node", TextType.ITALIC)
         self.assertNotEqual(node, node2)
 
-    def test_eqtext(self):
+    def test_only_eqtext(self):
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is a text node", TextType.ITALIC)
         self.assertEqual(node.text, node2.text)
@@ -30,7 +30,7 @@ class TestTextNode(unittest.TestCase):
     
     def test_TextNode_to_LeafNode_Invalid_Type(self):
           with self.assertRaises(ValueError):
-            node = TextNode("This is a text node", "NO")
+            node = TextNode("This is a text node", "INVALID")
             node.text_node_to_html_node()
 
     def test_TextNode_to_LeafNode_Text(self):
@@ -60,5 +60,19 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.value, "print('hello')")
 
 
+    def test_TextNode_to_LeafNode_Link(self):
+        node = TextNode("Click here", TextType.LINK, "https://example.com")
+        html_node = node.text_node_to_html_node()
+        self.assertEqual(html_node.tag, "a")
+        self.assertEqual(html_node.value, "Click here")
+        self.assertEqual(html_node.props, {"href": "https://example.com"})
+
+
+    def test_TextNode_to_LeafNode_Image(self):
+        node = TextNode("An image description", TextType.IMAGE, "https://example.com")
+        html_node = node.text_node_to_html_node()
+        self.assertEqual(html_node.tag, "img")
+        self.assertEqual(html_node.value, None)
+        self.assertEqual(html_node.props, {'src': 'https://example.com', 'alt': 'An image description'})
 if __name__ == "__main__":
     unittest.main()
