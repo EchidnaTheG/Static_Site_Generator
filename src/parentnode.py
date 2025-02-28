@@ -15,4 +15,12 @@ class ParentNode(HTMLNode):
 
         html += f"</{self.tag}>"
         return html
-       
+    
+
+    def __eq__(self, other):
+        if not isinstance(other, ParentNode):
+            return False
+        
+        return(self.tag == other.tag and 
+                self.children == other.children and 
+                self.props == other.props)
