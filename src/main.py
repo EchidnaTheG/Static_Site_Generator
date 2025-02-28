@@ -4,4 +4,5 @@ def main():
     test= TextNode("This is text node", TextType.BOLD,"https://www.boot.dev")
     print(test)
 
-main()
+if __name__ == "__main__":
+    main()
