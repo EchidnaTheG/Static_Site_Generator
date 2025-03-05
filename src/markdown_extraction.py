@@ -10,3 +10,6 @@ def extract_markdown_links(text):
     matches = re.findall(regex_pattern_link, text)
     return matches
 
+def split_nodes_image(old_nodes):
+    pass
+    
