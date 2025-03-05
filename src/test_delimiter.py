@@ -42,8 +42,7 @@ class TestDelimiter(unittest.TestCase):
         nodes = [
             TextNode("Normal `code` normal", TextType.TEXT),
             TextNode("Already bold", TextType.BOLD),
-            TextNode("More `code` here", TextType.TEXT)
-        ]
+            TextNode("More `code` here", TextType.TEXT) ] 
         result = split_nodes_delimiter(nodes, "`", TextType.CODE)
         self.assertEqual(len(result), 7)
         self.assertEqual(result[1].text_type, TextType.CODE)
