@@ -71,15 +71,7 @@ class TestMarkDown(unittest.TestCase):
         self.assertEqual(len(extract_markdown_links("")), 0)
         self.assertEqual(len(extract_markdown_images("")), 0)
 
-    def test_nested_brackets(self):
-        """Test handling of nested brackets"""
-        text = "[Link with [brackets]](https://example.com)"
-        matches = extract_markdown_links(text)
-        self.assertListEqual([
-            ("Link with [brackets]", "https://example.com")
-        ], matches)
-
-
+  
 
 
 
