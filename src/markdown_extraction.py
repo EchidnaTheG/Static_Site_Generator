@@ -106,3 +106,4 @@ def markdown_to_blocks(markdown):
             blocks.append(cleaned_block)
 
     return blocks
+

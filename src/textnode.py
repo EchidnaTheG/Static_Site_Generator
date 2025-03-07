@@ -38,4 +38,11 @@ class TextNode():
             return LeafNode("a", self.text,props={"href":self.url})
         elif self.text_type == TextType.IMAGE:
             return LeafNode("img", None,props={"src":self.url, "alt":self.text})
-        
+
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING= "heading"
+    CODE= "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
