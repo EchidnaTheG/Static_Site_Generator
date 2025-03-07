@@ -90,3 +90,19 @@ def text_to_textnodes(text):
     print(nodes)
     return nodes
 
+def markdown_to_blocks(markdown):
+    blocks = []
+    split_md = markdown.split("\n\n")
+    for block in split_md:
+
+        cleaned_block = block.strip()
+        if cleaned_block:
+            lines = cleaned_block.split('\n')
+
+            for i in range(1, len(lines)):
+                lines[i] = lines[i].lstrip()
+
+            cleaned_block = '\n'.join(lines)
+            blocks.append(cleaned_block)
+
+    return blocks
