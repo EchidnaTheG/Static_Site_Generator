@@ -1,5 +1,7 @@
 import re
 from textnode import TextNode, TextType
+from delimiter import split_nodes_delimiter
+
 def extract_markdown_images(text):
     regex_pattern_img= r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(regex_pattern_img, text)
@@ -50,8 +52,13 @@ def split_nodes_link(old_nodes):
             continue
        if not node.text:
            continue
+       
        current_text =node.text
        links = extract_markdown_links(node.text)
+       if not links:
+            new_nodes.append(node)
+            continue
+       
        for alt_text, link in links:
            link_markdown = f"[{alt_text}]({link})"
            parts = current_text.split(link_markdown, 1)
@@ -68,3 +75,19 @@ def split_nodes_link(old_nodes):
        if current_text:
             new_nodes.append(TextNode(current_text, TextType.TEXT))
     return new_nodes
+
+
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.TEXT)]
+
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+  
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    print(nodes)
+    return nodes
+
+text_to_textnodes("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)")
