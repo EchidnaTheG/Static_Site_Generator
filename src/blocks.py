@@ -16,6 +16,12 @@ def block_to_block_type(md):
     
     elif re.match(r"^```[\s\S]*```$", md):
         return BlockType.CODE
-
+    elif re.match(r'^>.*(\n>.*)*$', md):
+        return BlockType.QUOTE
+    elif re.match(r'^- .*(\n- .*)*$', md):
+        return BlockType.UNORDERED_LIST
+    elif re.match(r'^1\. .*(\n[2-9][0-9]*\. .*)*$', md):
+        return BlockType.ORDERED_LIST
     else:
         return BlockType.PARAGRAPH
+

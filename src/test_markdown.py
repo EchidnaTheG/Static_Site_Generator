@@ -2,7 +2,7 @@ import unittest
 
 from markdown_extraction import extract_markdown_links, extract_markdown_images, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
 from textnode import TextNode, TextType
-
+from blocks import block_to_block_type, BlockType
 
 class TestMarkDown(unittest.TestCase):
 
@@ -367,6 +367,33 @@ class TestMarkDown(unittest.TestCase):
         blocks = markdown_to_blocks(markdown)
         self.assertEqual(len(blocks), 1)
         self.assertEqual(blocks[0], "Just one paragraph")
+    # Test cases for block_to_block_type function
+    def test_block_to_block_type(self):
+        # Test heading
+        assert block_to_block_type("# Heading 1") == BlockType.HEADING
+        assert block_to_block_type("## Heading 2") == BlockType.HEADING
+        assert block_to_block_type("###### Heading 6") == BlockType.HEADING
+        
+        # Test code block
+        assert block_to_block_type("```\ncode line 1\ncode line 2\n```") == BlockType.CODE
+        assert block_to_block_type("```\ndef function():\n    return True\n```") == BlockType.CODE
+        
+        # Test quote block
+        assert block_to_block_type("> This is a quote") == BlockType.QUOTE
+        assert block_to_block_type("> Line 1\n> Line 2") == BlockType.QUOTE
+        
+        # Test unordered list
+        assert block_to_block_type("- Item 1") == BlockType.UNORDERED_LIST
+        assert block_to_block_type("- Item 1\n- Item 2\n- Item 3") == BlockType.UNORDERED_LIST
+        
+        # Test ordered list
+        assert block_to_block_type("1. First item") == BlockType.ORDERED_LIST
+        assert block_to_block_type("1. First item\n2. Second item\n3. Third item") == BlockType.ORDERED_LIST
+        
+        # Test paragraph
+        assert block_to_block_type("Just a regular paragraph.") == BlockType.PARAGRAPH
+        assert block_to_block_type("Paragraph with\nmultiple lines.") == BlockType.PARAGRAPH
+
 
 
 
