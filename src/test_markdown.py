@@ -1,6 +1,6 @@
 import unittest
 
-from markdown_extraction import extract_markdown_links, extract_markdown_images, split_nodes_image, split_nodes_link
+from markdown_extraction import extract_markdown_links, extract_markdown_images, split_nodes_image, split_nodes_link, text_to_textnodes
 from textnode import TextNode, TextType
 
 
@@ -244,7 +244,80 @@ def test_split_nodes_link_preserve_surrounding_text(self):
     self.assertEqual(len(result), 3)
     self.assertEqual(result[0].text, "Before ")
     self.assertEqual(result[2].text, " after")
-  
+
+def test_text_to_textnodes_basic(self):
+    """Test basic text conversion"""
+    nodes = text_to_textnodes("Plain text")
+    self.assertEqual(len(nodes), 1)
+    self.assertEqual(nodes[0].text, "Plain text")
+    self.assertEqual(nodes[0].text_type, TextType.TEXT)
+
+def test_text_to_textnodes_bold(self):
+    """Test bold text conversion"""
+    nodes = text_to_textnodes("This is **bold** text")
+    self.assertEqual(len(nodes), 3)
+    self.assertEqual(nodes[0].text, "This is ")
+    self.assertEqual(nodes[1].text, "bold")
+    self.assertEqual(nodes[1].text_type, TextType.BOLD)
+    self.assertEqual(nodes[2].text, " text")
+
+def test_text_to_textnodes_italic(self):
+    """Test italic text conversion"""
+    nodes = text_to_textnodes("This is _italic_ text")
+    self.assertEqual(len(nodes), 3)
+    self.assertEqual(nodes[1].text, "italic")
+    self.assertEqual(nodes[1].text_type, TextType.ITALIC)
+
+def test_text_to_textnodes_code(self):
+    """Test code block conversion"""
+    nodes = text_to_textnodes("Here is `code` block")
+    self.assertEqual(len(nodes), 3)
+    self.assertEqual(nodes[1].text, "code")
+    self.assertEqual(nodes[1].text_type, TextType.CODE)
+
+def test_text_to_textnodes_links(self):
+    """Test link conversion"""
+    nodes = text_to_textnodes("Here's a [link](https://example.com)")
+    self.assertEqual(len(nodes), 2)
+    self.assertEqual(nodes[1].text, "link")
+    self.assertEqual(nodes[1].text_type, TextType.LINK)
+    self.assertEqual(nodes[1].url, "https://example.com")
+
+def test_text_to_textnodes_images(self):
+    """Test image conversion"""
+    nodes = text_to_textnodes("Here's an ![image](image.jpg)")
+    self.assertEqual(len(nodes), 2)
+    self.assertEqual(nodes[1].text, "image")
+    self.assertEqual(nodes[1].text_type, TextType.IMAGE)
+    self.assertEqual(nodes[1].url, "image.jpg")
+
+def test_text_to_textnodes_mixed(self):
+    """Test mixed content conversion"""
+    text = "This is **bold** with an ![image](img.jpg) and _italic_"
+    nodes = text_to_textnodes(text)
+    self.assertEqual(len(nodes), 6)
+    self.assertEqual(nodes[1].text_type, TextType.BOLD)
+    self.assertEqual(nodes[3].text_type, TextType.IMAGE)
+    self.assertEqual(nodes[5].text_type, TextType.ITALIC)
+
+def test_text_to_textnodes_nested_formats(self):
+    """Test handling of nested formatting"""
+    nodes = text_to_textnodes("**Bold _italic_**")
+    self.assertEqual(len(nodes), 1)
+    self.assertEqual(nodes[0].text_type, TextType.BOLD)
+
+def test_text_to_textnodes_empty(self):
+    """Test empty string handling"""
+    nodes = text_to_textnodes("")
+    self.assertEqual(len(nodes), 0)
+
+def test_text_to_textnodes_multiple_similar(self):
+    """Test multiple instances of same formatting"""
+    nodes = text_to_textnodes("**bold** normal **bold**")
+    self.assertEqual(len(nodes), 3)
+    self.assertEqual(nodes[0].text_type, TextType.BOLD)
+    self.assertEqual(nodes[1].text_type, TextType.TEXT)
+    self.assertEqual(nodes[2].text_type, TextType.BOLD)
 
 
 
