@@ -90,4 +90,3 @@ def text_to_textnodes(text):
     print(nodes)
     return nodes
 
-text_to_textnodes("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)")
