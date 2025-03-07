@@ -1,6 +1,6 @@
 import unittest
 
-from markdown_extraction import extract_markdown_links, extract_markdown_images, split_nodes_image
+from markdown_extraction import extract_markdown_links, extract_markdown_images, split_nodes_image, split_nodes_link
 from textnode import TextNode, TextType
 
 
@@ -149,7 +149,101 @@ class TestMarkDown(unittest.TestCase):
         node = TextNode("", TextType.TEXT)
         result = split_nodes_image([node])
         self.assertEqual(len(result), 0)
+    def test_split_nodes_link_basic(self):
+   
+        node = TextNode("Here's a [link](https://example.com)", TextType.TEXT)
+        result = split_nodes_link([node])
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0].text, "Here's a ")
+        self.assertEqual(result[1].text, "link")
+        self.assertEqual(result[1].url, "https://example.com")
+        self.assertEqual(result[1].text_type, TextType.LINK)
 
+def test_split_nodes_multiple_links(self):
+    """Test handling multiple links in text"""
+    node = TextNode(
+        "Start [link1](url1.com) middle [link2](url2.com) end", 
+        TextType.TEXT
+    )
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 5)
+    self.assertEqual(result[1].text, "link1")
+    self.assertEqual(result[1].url, "url1.com")
+    self.assertEqual(result[3].text, "link2")
+    self.assertEqual(result[3].url, "url2.com")
+
+def test_split_nodes_link_with_non_text_nodes(self):
+    """Test that non-TEXT nodes are preserved"""
+    nodes = [
+        TextNode("[link](url.com)", TextType.TEXT),
+        TextNode("Bold", TextType.BOLD),
+        TextNode("[another](url2.com)", TextType.TEXT)
+    ]
+    result = split_nodes_link(nodes)
+    self.assertEqual(len(result), 3)
+    self.assertEqual(result[1].text_type, TextType.BOLD)
+
+def test_split_nodes_link_empty_text(self):
+    """Test handling empty text nodes"""
+    node = TextNode("", TextType.TEXT)
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 0)
+
+def test_split_nodes_link_no_links(self):
+    """Test text without any links"""
+    node = TextNode("Plain text without links", TextType.TEXT)
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 1)
+    self.assertEqual(result[0].text, "Plain text without links")
+
+def test_split_nodes_link_adjacent_links(self):
+    """Test handling adjacent links"""
+    node = TextNode(
+        "[link1](url1.com)[link2](url2.com)", 
+        TextType.TEXT
+    )
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 2)
+    self.assertEqual(result[0].text, "link1")
+    self.assertEqual(result[1].text, "link2")
+
+def test_split_nodes_link_with_spaces(self):
+    """Test links containing spaces"""
+    node = TextNode(
+        "[link with spaces](https://example.com/path with spaces)", 
+        TextType.TEXT
+    )
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 1)
+    self.assertEqual(result[0].text, "link with spaces")
+    self.assertEqual(
+        result[0].url, 
+        "https://example.com/path with spaces"
+    )
+
+def test_split_nodes_link_complex_urls(self):
+    """Test links with complex URLs"""
+    node = TextNode(
+        "[link](https://api.example.com/v1?query=test&page=1#section)", 
+        TextType.TEXT
+    )
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 1)
+    self.assertEqual(
+        result[0].url, 
+        "https://api.example.com/v1?query=test&page=1#section"
+    )
+
+def test_split_nodes_link_preserve_surrounding_text(self):
+    """Test preservation of text around links"""
+    node = TextNode(
+        "Before [link](url.com) after", 
+        TextType.TEXT
+    )
+    result = split_nodes_link([node])
+    self.assertEqual(len(result), 3)
+    self.assertEqual(result[0].text, "Before ")
+    self.assertEqual(result[2].text, " after")
   
 
 

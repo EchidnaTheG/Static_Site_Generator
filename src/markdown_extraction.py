@@ -42,5 +42,29 @@ def split_nodes_image(old_nodes):
     
     return new_nodes
 
-node =TextNode("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",TextType.TEXT)
-print(split_nodes_image([node]))
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+       if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+       if not node.text:
+           continue
+       current_text =node.text
+       links = extract_markdown_links(node.text)
+       for alt_text, link in links:
+           link_markdown = f"[{alt_text}]({link})"
+           parts = current_text.split(link_markdown, 1)
+       if parts[0]:
+                new_nodes.append(TextNode(parts[0], TextType.TEXT))
+                
+       new_nodes.append(TextNode(alt_text, TextType.LINK, link))
+                
+       if len(parts) > 1:
+                current_text = parts[1]
+       else:
+                current_text = ""
+
+       if current_text:
+            new_nodes.append(TextNode(current_text, TextType.TEXT))
+    return new_nodes
